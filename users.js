@@ -9,10 +9,10 @@ const START_POSITION = [
     ['rw', 'nw', 'bw', 'qw', 'kw', 'bw', 'nw', 'rw']
 ];
 const users = [];
-var roomlist = [['room-0', START_POSITION]];
+roomlist = [['room-0', START_POSITION]];
 
-const addUser = ({id, room}) => {
-    const user = { id, room };
+const addUser = ({id, room, player }) => {
+    const user = { id, room, player };
     users.push(user);
     return { user };
 }
@@ -29,7 +29,10 @@ const getUser = (id) => users.find((user) => user.id === id);
 
 const getUsersInRoom = (room) => users.filter((user) => user.room === room);
 
-const getRoomPositions = (room) => roomlist.filter((rooms) => rooms[0] === room)[0][1];
+const getRoomPositions = (room) => {
+    const pos = roomlist.filter((rooms) => rooms[0] === room)[0][1];
+    return pos;
+}
 
 const updateRoom = (room, position) => {
     roomlist[roomlist.findIndex((element) => element[0] == room)][1] = position;

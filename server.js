@@ -5,6 +5,7 @@ const PORT = process.env.PORT || 3000;
 const io = require('socket.io')(server);
 const { addUser, removeUser, getUser, getUsersInRoom, getRoomPositions, updateRoom, roomlist, START_POSITION } = require('./users.js');
 const { checkMoveValidity } = require('./move.js');
+
 app.get('/', (req, res) => {
     res.sendFile(__dirname+'/index.html');
 });
@@ -22,29 +23,36 @@ io.on('connection', (socket) => {
 
     for (i = 0; i < roomlist.length; i++) {
         if (getUsersInRoom(roomlist[i][0]).length < 2) {
-            let user = addUser({ id: socket.id, room: roomlist[i][0] });
+            if (getUsersInRoom(roomlist[i][0]).length == 0) player = 1;
+            else if (getUsersInRoom(roomlist[i][0]).length == 1) {
+                if (getUsersInRoom(roomlist[i][0][0].player == 1)) player = 2;
+                else player = 1;
+            }
+            addUser({ id: socket.id, room: roomlist[i][0], player});
             socket.join(roomlist[i][0]);
-            console.log(socket.id, 'entrou na sala', roomlist[i][0]);
             break;
         } else if (i == roomlist.length - 1) {
             roomlist.push(['room-'+String(roomlist.length), START_POSITION])
-            let user = addUser({ id: socket.id, room: roomlist[i+1][0] });
-            console.log(socket.id, 'criou a sala', roomlist[i+1][0]);
+            addUser({ id: socket.id, room: roomlist[i+1][0], player: 1 });
             socket.join(roomlist[i+1][0]);
             break;
         }
     }
-    socket.emit('sendPositions', getRoomPositions(getUser(socket.id).room));
 
-    socket.on('move', ({ initial, final }) => {
-        let user = getUser(socket.id);
-        let room_positions = getRoomPositions(user.room);
-        
-        if (checkMoveValidity(room_positions, initial, final) === true) {
+    console.log(getUser(socket.id));
+    socket.emit('sendPositions', { positions: getRoomPositions(getUser(socket.id).room), player: getUser(socket.id).player });
+
+    socket.on('move', async ({ initial, final }) => {
+        user = getUser(socket.id);
+        room_positions = getRoomPositions(user.room);
+        if (checkMoveValidity(room_positions, initial, final, user.player) === true) {
             room_positions[final[1]][final[0]] = room_positions[initial[1]][initial[0]];
             room_positions[initial[1]][initial[0]] = '';
+            console.log(getRoomPositions(user.room));
+            console.log();
             updateRoom(user.room, room_positions);
-            io.to(user.room).emit('sendPositions', room_positions);
+            console.log(getRoomPositions(user.room));
+            io.to(user.room).emit('sendPositions', { positions: room_positions, player: user.player });
         }
     });
     

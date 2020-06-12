@@ -27,7 +27,10 @@ function setup() {
 var positions;
 
 socket.on('sendPositions', (data) => {
-    positions = data;
+    player = data.player;
+    positions = data.positions;
+    document.getElementById('player').innerHTML = `You are player ${player}.`;
+    
 });
 
 function sendMove(initial, final) {
@@ -43,7 +46,7 @@ function draw() {
     } else if (!mouseIsPressed) {
         isPressing = 0;
         isSending = 0;
-    } else if (mouseIsPressed && holding != -1 && isPressing != 1) {
+    } else if (mouseIsPressed && holding != -1 && isPressing != 1 && (mouseX > 0 && mouseX < 360 && mouseY > 0 && mouseY < 360)) {
         let x = Math.floor(mouseX / 45);
         let y = Math.floor(mouseY / 45);
         sendMove([holding-8*Math.floor(holding/8),Math.floor(holding/8)],[x,y]);
