@@ -26,11 +26,13 @@ function setup() {
 }
 var positions;
 
-socket.on('sendPositions', (data) => {
+socket.on('sendPlayer', (data) => {
     player = data.player;
-    positions = data.positions;
     document.getElementById('player').innerHTML = `You are player ${player}.`;
-    
+});
+
+socket.on('sendPositions', (data) => {
+    positions = data.positions;
 });
 
 function sendMove(initial, final) {
