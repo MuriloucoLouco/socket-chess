@@ -20,6 +20,7 @@ function preload() {
 
 function setup() {
     createCanvas(360, 360);
+    player = 1;
     holding = -1;
     isPressing = 0;
     isSending = 0;
@@ -35,8 +36,15 @@ socket.on('sendPositions', (data) => {
     positions = data.positions;
 });
 
+
+socket.on('lastPlayer', (data) => {
+    lastPlayer = data;
+    turn = lastPlayer-1 ? 'black' : 'white';
+    document.getElementById('turn').innerHTML = `Turn: ${turn}`;
+});
+
 function sendMove(initial, final) {
-    socket.emit('move', {initial, final});
+    if (initial != final) socket.emit('move', {initial, final});
 }
 
 function draw() {

@@ -4,9 +4,10 @@ const server = http.createServer(app);
 const PORT = process.env.PORT || 3000;
 const io = require('socket.io')(server);
 const util = require('util')
-const { addUser, removeUser, getUser, getUsersInRoom, getRoomPositions, updateRoom, addRoom, roomlist, START_POSITION } = require('./users.js');
+const { addUser, removeUser, getUser, getUsersInRoom, getRoomPositions, updateRoom, addRoom, getRoomLast, updateLast, roomlist } = require('./users.js');
 const { checkMoveValidity } = require('./move.js');
 
+//Routes
 app.get('/', (req, res) => {
     res.sendFile(__dirname+'/index.html');
 });
@@ -20,6 +21,7 @@ app.get('/images/:file', (req, res) => {
     catch (error) { console.log(error); }
 });
 
+//Sockets
 io.on('connection', (socket) => {
     
     for (i = 0; i < roomlist.length; i++) {
@@ -48,9 +50,10 @@ io.on('connection', (socket) => {
         }
     }
     
-    
-    socket.emit('sendPlayer', { player: getUser(socket.id).player });
-    socket.emit('sendPositions', { positions: getRoomPositions(getUser(socket.id).room) });
+    user = getUser(socket.id);
+    socket.emit('sendPlayer', { player: user.player });
+    socket.emit('sendPositions', { positions: getRoomPositions(user.room) });
+    socket.emit('lastPlayer', getRoomLast(user.room));
 
     console.log(getUser(socket.id));
 
@@ -58,15 +61,17 @@ io.on('connection', (socket) => {
 
         user = getUser(socket.id);
         room_positions = getRoomPositions(user.room);
+        lastPlayer = getRoomLast(user.room);
 
-        if (checkMoveValidity(room_positions, initial, final, user.player) === true) {
+        if (checkMoveValidity(room_positions, initial, final, user.player, lastPlayer) === true) {
 
             room_positions[final[1]][final[0]] = room_positions[initial[1]][initial[0]];
             room_positions[initial[1]][initial[0]] = '';
 
-            user = getUser(socket.id);
             updateRoom(user.room, room_positions);
+            updateLast(user.room);
 
+            io.to(user.room).emit('lastPlayer', lastPlayer);
             io.to(user.room).emit('sendPositions', { positions: room_positions });
         }
     });
