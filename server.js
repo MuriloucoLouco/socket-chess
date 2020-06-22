@@ -31,6 +31,16 @@ io.on('connection', (socket) => {
         if (usersInRoom.length < 2) {
 
             if (usersInRoom.length == 0) {
+                updateRoom(roomlist[i][0], [
+                    ['rb', 'nb', 'bb', 'qb', 'kb', 'bb', 'nb', 'rb'],
+                    ['pb', 'pb', 'pb', 'pb', 'pb', 'pb', 'pb', 'pb'],
+                    ['', '', '', '', '', '', '', ''],
+                    ['', '', '', '', '', '', '', ''],
+                    ['', '', '', '', '', '', '', ''],
+                    ['', '', '', '', '', '', '', ''],
+                    ['pw', 'pw', 'pw', 'pw', 'pw', 'pw', 'pw', 'pw'],
+                    ['rw', 'nw', 'bw', 'qw', 'kw', 'bw', 'nw', 'rw']
+                ]);
                 addUser({ id: socket.id, room: roomlist[i][0], player: 1 });
             } else if (usersInRoom.length == 1){
                 if (usersInRoom[0].player == 1) {
@@ -54,8 +64,9 @@ io.on('connection', (socket) => {
     socket.emit('sendPlayer', { player: user.player });
     socket.emit('sendPositions', { positions: getRoomPositions(user.room) });
     socket.emit('lastPlayer', getRoomLast(user.room));
+    io.to(user.room).emit('players', getUsersInRoom(user.room).length);
 
-    console.log(getUser(socket.id));
+    console.log(`User ${user.id} joined ${user.room}.`);
 
     socket.on('move', ({ initial, final }) => {
 
@@ -78,10 +89,11 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         removeUser(socket.id);
-        console.log('Usuário meteu o pé.', socket.id);
+        io.to(user.room).emit('players', getUsersInRoom(user.room).length);
+        console.log('User left:', socket.id);
     });
 });
 
 server.listen(PORT, () => {
-    console.log('Servidor rodando em:', PORT);
+    console.log('Server running in port', PORT);
 });

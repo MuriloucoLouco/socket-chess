@@ -20,12 +20,13 @@ function preload() {
 
 function setup() {
     createCanvas(360, 360);
-    player = 1;
+
     holding = -1;
     isPressing = 0;
     isSending = 0;
 }
 var positions;
+player = 1;
 
 socket.on('sendPlayer', (data) => {
     player = data.player;
@@ -43,8 +44,30 @@ socket.on('lastPlayer', (data) => {
     document.getElementById('turn').innerHTML = `Turn: ${turn}`;
 });
 
+socket.on('players', (data) => {
+    document.getElementById('number').innerHTML = data - 1 ? 'Opponent online' : 'Waiting new players...';
+});
+
+flip = function (matrix) {
+    temp_matrix = Array();
+    for (i = 0; i < matrix.length; i++) {
+        temp_array = Array();
+        for (k = 0; k < matrix[i].length; k++) {
+            temp_array.unshift(matrix[i][k]);
+        }
+        temp_matrix.unshift(temp_array);
+    }
+    return temp_matrix;
+}
+
 function sendMove(initial, final) {
-    if (initial != final) socket.emit('move', {initial, final});
+    if (initial != final) {
+        if (player-1) {
+            socket.emit('move', { initial : [ 7 - initial[0], 7 - initial[1] ], final : [ 7 - final[0], 7 - final[1] ] });
+        } else {
+            socket.emit('move', { initial, final });
+        }
+    }
 }
 
 function draw() {
@@ -64,6 +87,8 @@ function draw() {
         isSending = 1;
     }
 
+    flipped = player-1 ? flip(positions) : positions;
+
     background(128);
     for (let i = 0; i < 8; i++) {
         for (let k = 0; k < 8; k++) {
@@ -80,17 +105,18 @@ function draw() {
             }
         }
     }
+
     for (let i = 0; i < 8; i++) {
         for (let k = 0; k < 8; k++) {
             if (i + 8 * k != holding) {
-                image(images[positions[k][i]], 45 * i, 45 * k);
+                image(images[flipped[k][i]], 45 * i, 45 * k);
             }
         }
     }
     for (let i = 0; i < 8; i++) {
         for (let k = 0; k < 8; k++) {
             if (i + 8 * k == holding) {
-                image(images[positions[k][i]], mouseX-22, mouseY-22);
+                image(images[flipped[k][i]], mouseX-22, mouseY-22);
             }
         }
     }
