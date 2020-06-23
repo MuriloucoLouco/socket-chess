@@ -75,6 +75,7 @@ io.on('connection', (socket) => {
         lastPlayer = getRoomLast(user.room);
 
         if (checkMoveValidity(room_positions, initial, final, user.player, lastPlayer) === true) {
+            final_piece = room_positions[final[1]][final[0]];
 
             room_positions[final[1]][final[0]] = room_positions[initial[1]][initial[0]];
             room_positions[initial[1]][initial[0]] = '';
@@ -84,6 +85,17 @@ io.on('connection', (socket) => {
 
             io.to(user.room).emit('lastPlayer', lastPlayer);
             io.to(user.room).emit('sendPositions', { positions: room_positions });
+
+            if (final_piece[0] == 'k') {
+                io.to(user.room).emit('finish', getRoomLast(user.room));
+                inRoom = getUsersInRoom(user.room);
+                for (i = 0; i < inRoom.length; i++) {
+                    console.log('User left:', socket.id);
+                    io.sockets.connected[inRoom[i].id].disconnect();
+                    removeUser(inRoom[i].id);
+                }
+                
+            }
         }
     });
 

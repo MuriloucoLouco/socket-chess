@@ -48,6 +48,15 @@ socket.on('players', (data) => {
     document.getElementById('number').innerHTML = data - 1 ? 'Opponent online' : 'Waiting new players...';
 });
 
+socket.on('finish', (data) => {
+    winner = data;
+    if (winner == player) {
+        document.getElementById('number').innerHTML = 'You won!';
+    } else {
+        document.getElementById('number').innerHTML = 'You losed.';
+    }
+});
+
 flip = function (matrix) {
     temp_matrix = Array();
     for (i = 0; i < matrix.length; i++) {
