@@ -23,9 +23,7 @@ app.get('/images/:file', (req, res) => {
 
 //Sockets
 io.on('connection', (socket) => {
-    
     for (i = 0; i < roomlist.length; i++) {
-
         let usersInRoom = getUsersInRoom(roomlist[i][0]);
 
         if (usersInRoom.length < 2) {
@@ -42,6 +40,7 @@ io.on('connection', (socket) => {
                     ['rw', 'nw', 'bw', 'qw', 'kw', 'bw', 'nw', 'rw']
                 ]);
                 addUser({ id: socket.id, room: roomlist[i][0], player: 1 });
+
             } else if (usersInRoom.length == 1){
                 if (usersInRoom[0].player == 1) {
                     addUser({ id: socket.id, room: roomlist[i][0], player: 2 });
@@ -51,6 +50,7 @@ io.on('connection', (socket) => {
             }
             socket.join(roomlist[i][0]);
             break;
+
         } else if (usersInRoom.length == 2 && i == roomlist.length - 1) {
 
             addRoom(i+1);

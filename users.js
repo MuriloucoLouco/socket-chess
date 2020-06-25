@@ -34,7 +34,9 @@ const getUser = (id) => users.find((user) => user.id === id);
 const getUsersInRoom = (room) => users.filter((user) => user.room === room);
 
 const getRoomPositions = (room) => roomlist.filter((rooms) => rooms[0] === room)[0][1];
+
 const getRoomLast = (room) => roomlist.filter((rooms) => rooms[0] === room)[0][2];
+
 const updateLast = (room) => {
     new_last = getRoomLast(room)-1 ? 1 : 2;
     roomlist[roomlist.findIndex((element) => element[0] == room)][2] = new_last;
