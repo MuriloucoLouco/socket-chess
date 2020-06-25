@@ -94,7 +94,6 @@ io.on('connection', (socket) => {
                     io.sockets.connected[inRoom[i].id].disconnect();
                     removeUser(inRoom[i].id);
                 }
-                
             }
         }
     });

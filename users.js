@@ -56,7 +56,7 @@ const addRoom = (roomNumber) => roomlist.push([
         ['pw', 'pw', 'pw', 'pw', 'pw', 'pw', 'pw', 'pw'],
         ['rw', 'nw', 'bw', 'qw', 'kw', 'bw', 'nw', 'rw']
     ],
-    2
+    1
 ]);
 
 module.exports = { addUser, removeUser, getUser, getUsersInRoom, getRoomPositions, updateRoom, addRoom, getRoomLast, updateLast, roomlist };

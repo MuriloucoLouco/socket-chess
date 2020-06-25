@@ -51,9 +51,9 @@ socket.on('players', (data) => {
 socket.on('finish', (data) => {
     winner = data;
     if (winner == player) {
-        document.getElementById('number').innerHTML = 'You won!';
+        document.getElementById('finish').innerHTML = 'You won!';
     } else {
-        document.getElementById('number').innerHTML = 'You losed.';
+        document.getElementById('finish').innerHTML = 'You losed.';
     }
 });
 
@@ -98,19 +98,19 @@ function draw() {
 
     flipped = player-1 ? flip(positions) : positions;
 
-    background(128);
+    background('#b8803b');
     for (let i = 0; i < 8; i++) {
         for (let k = 0; k < 8; k++) {
             let color;
             if (i % 2 === 0){ color = 0 }
             else { color = 1 }
-            if (k % 2 === color) { fill(255); square(45*i, 45*k, 45) }
-            else { fill(100); square(45*i, 45*k, 45) }
+            if (k % 2 === color) { fill('#b8803b'); square(45*i, 45*k, 45) }
+            else { fill('#401806'); square(45*i, 45*k, 45) }
             if (i + 8 * k == holding) {
-                fill(128, 255, 128); square(45*i, 45*k, 45);
+                fill(128, 128, 255); square(45*i, 45*k, 45);
             }
             if (holding != -1) {
-                fill(128, 128, 255); square(45*Math.floor(mouseX / 45), 45*Math.floor(mouseY / 45), 45);
+                fill(128, 255, 128); square(45*Math.floor(mouseX / 45), 45*Math.floor(mouseY / 45), 45);
             }
         }
     }

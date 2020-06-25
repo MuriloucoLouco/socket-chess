@@ -1,4 +1,13 @@
-function checkMoveValidity (positions, initial, final, player, last) {
+function checkMoveValidity(positions, initial, final, player, last) {
+
+    if (typeof (initial) === 'undefined' || typeof (final) === 'undefined') return false;
+
+    if (initial.constructor != Array) return false;
+    if (final.constructor != Array) return false;
+    if (initial[0] < 0 || initial[0] > 7) return false;
+    if (initial[1] < 0 || initial[1] > 7) return false;
+    if (final[0] < 0 || final[0] > 7) return false;
+    if (final[1] < 0 || final[1] > 7) return false;
 
     let ini_pos = positions[initial[1]][initial[0]];
     let fin_pos = positions[final[1]][final[0]];
@@ -99,7 +108,7 @@ function checkMoveValidity (positions, initial, final, player, last) {
             let kx = way_x;
             let ky = way_y;
             for (i = 1; i < adx; i++) {
-                if (positions[initial[1]+ky][initial[0]+kx] != '')                          return false;
+                if (positions[initial[1]+ky][initial[0]+kx] != '')                      return false;
                 kx += way_x;
                 ky += way_y;
             }

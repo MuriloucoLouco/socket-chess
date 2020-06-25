@@ -6,12 +6,38 @@
     <meta charset="UTF-8">
     <meta name="chess" content="width=device-width, initial-scale=1.0">
     <title>Chess Project</title>
+
+    <style>
+        .container {
+            padding: 20px 50px;
+            padding-bottom: 30px;
+        }
+
+        .wrapper {
+            float: right;
+            color: #EEE;
+            background-color: black;
+            padding: 30px 30px;
+            border-radius: 10px;
+            font-family: Helvetica, Arial, sans-serif;
+            font-weight: 700;
+        }
+
+        body {
+            background-color: #131118;
+        }
+    </style>
 </head>
-<body style="width: 50%; margin: 0 auto">
+<body>
+
     <script src="/script.js"></script>
-    <div id="player"></div>
-    <div id="turn"></div>
-    <div id="number"></div>
-    <h1><div id="finish"></div></h1>
+    <div class="container">
+        <div class="wrapper">
+            <div id="player"></div>
+            <div id="turn"></div>
+            <div id="number"></div>
+            <div id="finish"></div>
+        </div>
+    </div>
 </body>
 </html>
