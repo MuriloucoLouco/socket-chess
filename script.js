@@ -50,6 +50,7 @@ socket.on('players', (data) => {
 
 socket.on('finish', (data) => {
     winner = data;
+    
     if (winner == player) {
         document.getElementById('finish').innerHTML = 'You won!';
     } else {
@@ -59,13 +60,16 @@ socket.on('finish', (data) => {
 
 flip = function (matrix) {
     temp_matrix = Array();
+
     for (i = 0; i < matrix.length; i++) {
         temp_array = Array();
+
         for (k = 0; k < matrix[i].length; k++) {
             temp_array.unshift(matrix[i][k]);
         }
         temp_matrix.unshift(temp_array);
     }
+
     return temp_matrix;
 }
 
@@ -85,9 +89,11 @@ function draw() {
         let y = Math.floor(mouseY / 45);
         holding = x + y * 8;
         isPressing = 1;
+
     } else if (!mouseIsPressed) {
         isPressing = 0;
         isSending = 0;
+
     } else if (mouseIsPressed && holding != -1 && isPressing != 1 && (mouseX > 0 && mouseX < 360 && mouseY > 0 && mouseY < 360)) {
         let x = Math.floor(mouseX / 45);
         let y = Math.floor(mouseY / 45);

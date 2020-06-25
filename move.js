@@ -76,6 +76,7 @@ function checkMoveValidity(positions, initial, final, player, last) {
         let way_y = dy / ady;
         let kx = way_x;
         let ky = way_y;
+
         for (i = 1; i < adx; i++) {
             if (positions[initial[1]+ky][initial[0]+kx] != '')                          return false;
             kx += way_x;
@@ -89,14 +90,15 @@ function checkMoveValidity(positions, initial, final, player, last) {
         if (ady == 0) {
             let way = dx / adx;
             let k = way;
-            for (i = 1; i < adx; i++) {
 
+            for (i = 1; i < adx; i++) {
                 if (positions[initial[1]][initial[0]+k] != '')                          return false;
                 k += way;
             }
         } else if (adx == 0) {
             let way = dy / ady;
             let k = way;
+
             for (i = 1; i < ady; i++) {
                 
                 if (positions[initial[1]+k][initial[0]] != '')                          return false;
@@ -107,6 +109,7 @@ function checkMoveValidity(positions, initial, final, player, last) {
             let way_y = dy / ady;
             let kx = way_x;
             let ky = way_y;
+            
             for (i = 1; i < adx; i++) {
                 if (positions[initial[1]+ky][initial[0]+kx] != '')                      return false;
                 kx += way_x;
