@@ -18,6 +18,7 @@
 
         .wrapper {
             float: right;
+			width: 20%;
             color: #EEE;
             background-color: black;
             padding: 30px 30px;
@@ -25,6 +26,31 @@
             font-family: Helvetica, Arial, sans-serif;
             font-weight: 700;
         }
+		
+		#messages {
+			background-color: white;
+			color: black;
+			word-wrap: break-word;
+			max-width: 100%;
+			padding: 10px;
+			border-radius: 5px;
+		}
+		
+		.batepapo {
+			padding-top: 7px;
+		}
+		
+		#text-box {
+			width: 100%;
+		}
+		
+		.itself {
+			color: green;
+		}
+		
+		.other {
+			color: blue;
+		}
     </style>
 </head>
 
@@ -49,6 +75,12 @@
             <div id="turn"></div>
             <div id="number"></div>
             <div id="finish"></div>
+			<p>Bate-papo:</p>
+			<div id="messages"></div>
+			<div class="batepapo">
+				<input id="text-box" type="text" placeholder="Escreva seu texto"></input>
+				<button onclick="inputSend()">ENVIAR</button>
+			</div>
         </div>
 
 		<canvas id="chess" width="360" height="360"></canvas>

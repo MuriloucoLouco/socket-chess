@@ -98,6 +98,11 @@ io.on('connection', (socket) => {
         }
     });
 
+	socket.on('message', (message) => {
+		user = getUser(socket.id);
+		io.to(user.room).emit('message', { message, emiter: user.player });
+	});
+
     socket.on('disconnect', () => {
         removeUser(socket.id);
         io.to(user.room).emit('players', getUsersInRoom(user.room).length);

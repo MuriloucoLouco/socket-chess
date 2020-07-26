@@ -41,6 +41,18 @@ window.addEventListener('mouseup', (e) => {
 	mouseIsPressed = false
 })
 
+document.getElementById("text-box").addEventListener("keydown", (e) => {
+    if (!e) {
+		var e = window.event;
+	}
+
+    if (e.keyCode == 13) {
+		inputSend();
+	}
+}, false);
+
+
+
 socket.on('sendPlayer', (data) => {
     player = data.player;
     document.getElementById('player').innerHTML = `You are player ${player}.`;
@@ -71,6 +83,18 @@ socket.on('finish', (data) => {
     }
 });
 
+socket.on('message', (data) => {
+	document.getElementById('messages').innerHTML += `<span class="${(data.emiter == player) ? 'itself' : 'other'}">${data.message}</span><br>`
+});
+
+function inputSend() {
+	sendMessage(document.getElementById('text-box').value);
+	document.getElementById('text-box').value='';
+}
+
+function sendMessage(message) {
+	socket.emit('message', message);
+}
 
 function flip(matrix) {
     temp_matrix = Array();
@@ -160,4 +184,4 @@ function draw() {
     }
 }
 
-setInterval(draw, 10)
+setInterval(draw, 10);
