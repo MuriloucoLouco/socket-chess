@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.0.0/p5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
     <meta charset="UTF-8">
     <meta name="chess" content="width=device-width, initial-scale=1.0">
     <title>Chess Project</title>
 
-    <script src="/script.js"></script>
-
     <style>
+        body {
+            background-color: #131118;
+        }
+	
         .container {
-            padding: 20px 50px;
+            padding: 50px 80px;
             padding-bottom: 30px;
         }
 
@@ -24,14 +25,24 @@
             font-family: Helvetica, Arial, sans-serif;
             font-weight: 700;
         }
-
-        body {
-            background-color: #131118;
-        }
     </style>
 </head>
 
 <body>
+	<img hidden id="pw" src="images/pw">
+	<img hidden id="pb" src="images/pb">
+	<img hidden id="kw" src="images/kw">
+	<img hidden id="kb" src="images/kb">
+	<img hidden id="nw" src="images/nw">
+	<img hidden id="nb" src="images/nb">
+	<img hidden id="bw" src="images/bw">
+	<img hidden id="bb" src="images/bb">
+	<img hidden id="qw" src="images/qw">
+	<img hidden id="qb" src="images/qb">
+	<img hidden id="rw" src="images/rw">
+	<img hidden id="rb" src="images/rb">
+	<img hidden id="blank" src="images/blank">
+
     <div class="container">
         <div class="wrapper">
             <div id="player"></div>
@@ -39,6 +50,10 @@
             <div id="number"></div>
             <div id="finish"></div>
         </div>
+
+		<canvas id="chess" width="360" height="360"></canvas>
+		<script src="/script.js"></script>
+		
     </div>
 </body>
 

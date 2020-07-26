@@ -1,32 +1,45 @@
 var socket = io();
+var canvas = document.getElementById('chess')
+ctx = canvas.getContext('2d');
 
-function preload() {
-    images = {
-        'pw': loadImage('images/pw'),
-        'pb' :loadImage('images/pb'),
-        'kw' :loadImage('images/kw'),
-        'kb' :loadImage('images/kb'),
-        'nw' :loadImage('images/nw'),
-        'nb' :loadImage('images/nb'),
-        'bw' :loadImage('images/bw'),
-        'bb' :loadImage('images/bb'),
-        'qw' :loadImage('images/qw'),
-        'qb' :loadImage('images/qb'),
-        'rw' :loadImage('images/rw'),
-        'rb' :loadImage('images/rb'),
-        ''   :loadImage('images/blank'), 
-    }
-}
-
-function setup() {
-    createCanvas(360, 360);
-
-    holding = -1;
-    isPressing = 0;
-    isSending = 0;
-}
+holding = -1;
+isPressing = 0;
+isSending = 0;
 var positions;
 player = 1;
+mouseIsPressed = false;
+mouseX = 0;
+mouseY = 0;
+
+images = {
+	'pw' : document.getElementById('pw'),
+	'pb' : document.getElementById('pb'),
+	'kw' : document.getElementById('kw'),
+	'kb' : document.getElementById('kb'),
+	'nw' : document.getElementById('nw'),
+	'nb' : document.getElementById('nb'),
+	'bw' : document.getElementById('bw'),
+	'bb' : document.getElementById('bb'),
+	'qw' : document.getElementById('qw'),
+	'qb' : document.getElementById('qb'),
+	'rw' : document.getElementById('rw'),
+    'rb' : document.getElementById('rb'),
+    ''   : document.getElementById('blank'),
+}
+
+window.addEventListener('mousemove', (e) => {
+	var rect = canvas.getBoundingClientRect();
+	mouseX = e.clientX - rect.left;
+	mouseY = e.clientY - rect.top;
+});
+
+window.addEventListener('mousedown', (e) => {
+	mouseIsPressed = true
+})
+
+window.addEventListener('mouseup', (e) => {
+	mouseIsPressed = false
+})
 
 socket.on('sendPlayer', (data) => {
     player = data.player;
@@ -58,7 +71,8 @@ socket.on('finish', (data) => {
     }
 });
 
-flip = function (matrix) {
+
+function flip(matrix) {
     temp_matrix = Array();
 
     for (i = 0; i < matrix.length; i++) {
@@ -101,22 +115,31 @@ function draw() {
         holding = -1;
         isSending = 1;
     }
+	
+	flipped = player-1 ? flip(positions) : positions;
 
-    flipped = player-1 ? flip(positions) : positions;
-
-    background('#b8803b');
+	ctx.fillStyle = '#b8803b';
+    ctx.fillRect(0,0,360,360);
     for (let i = 0; i < 8; i++) {
         for (let k = 0; k < 8; k++) {
             let color;
             if (i % 2 === 0){ color = 0 }
             else { color = 1 }
-            if (k % 2 === color) { fill('#b8803b'); square(45*i, 45*k, 45) }
-            else { fill('#401806'); square(45*i, 45*k, 45) }
+            if (k % 2 === color) {
+				ctx.fillStyle = '#b8803b';
+				ctx.fillRect(45*i, 45*k, 45, 45)
+			}
+            else {
+				ctx.fillStyle = '#401806';
+				ctx.fillRect(45*i, 45*k, 45, 45)
+			}
             if (i + 8 * k == holding) {
-                fill(128, 128, 255); square(45*i, 45*k, 45);
+                ctx.fillStyle = 'rgb(128, 128, 255)';
+				ctx.fillRect(45*i, 45*k, 45, 45);
             }
             if (holding != -1) {
-                fill(128, 255, 128); square(45*Math.floor(mouseX / 45), 45*Math.floor(mouseY / 45), 45);
+                ctx.fillStyle = 'rgb(128, 255, 128)';
+				ctx.fillRect(45*Math.floor(mouseX / 45), 45*Math.floor(mouseY / 45), 45, 45);
             }
         }
     }
@@ -124,15 +147,17 @@ function draw() {
     for (let i = 0; i < 8; i++) {
         for (let k = 0; k < 8; k++) {
             if (i + 8 * k != holding) {
-                image(images[flipped[k][i]], 45 * i, 45 * k);
+                ctx.drawImage(images[flipped[k][i]], 45 * i, 45 * k);
             }
         }
     }
     for (let i = 0; i < 8; i++) {
         for (let k = 0; k < 8; k++) {
             if (i + 8 * k == holding) {
-                image(images[flipped[k][i]], mouseX-22, mouseY-22);
+                ctx.drawImage(images[flipped[k][i]], mouseX-22, mouseY-22);
             }
         }
     }
 }
+
+setInterval(draw, 10)
